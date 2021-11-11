@@ -1,0 +1,22 @@
+const Schema = require('@ostro/database/schema')
+const Migration = require('@ostro/database/migration')
+
+class CreateCacheTable extends Migration
+{
+
+    up()
+    {
+        Schema.create('cache', function ($table) {
+            $table.string('key').primary();
+            $table.mediumText('value');
+            $table.integer('expiration');
+        });
+    }
+
+    down()
+    {
+        Schema.dropIfExists('cache');
+    }
+}
+
+module.exports = CreateCacheTable

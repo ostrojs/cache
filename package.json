@@ -1,0 +1,31 @@
+{
+  "name": "@ostro/cache",
+  "version": "0.0.0-alpha.0",
+  "description": "A OstroJS caching module",
+  "engines": {
+    "node": ">= 12.0"
+  },
+  "main": "cacheManager.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@ostro/support": "^0.0.0-alpha.0",
+    "bluebird": "^3.7.2",
+    "fs-extra": "^10.0.0"
+  },
+  "keywords": [
+    "cache",
+    "nodejs cache"
+  ],
+  "author": "amar",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ostrojs/cache.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ostrojs/cache/issues"
+  },
+  "homepage": "https://github.com/ostrojs/cache#readme"
+}
