@@ -1,22 +1,22 @@
 {
   "name": "@ostro/cache",
   "version": "0.0.0-alpha.0",
-  "description": "A OstroJS caching module",
-  "engines": {
-    "node": ">= 12.0"
-  },
+  "description": "Caching module for OstroJS",
   "main": "cacheManager.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@ostro/support": "^0.0.0-alpha.0",
+    "@ostro/support": "^0.0.0-alpha",
     "bluebird": "^3.7.2",
     "fs-extra": "^10.0.0"
   },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "engineStrict": true,
   "keywords": [
-    "cache",
-    "nodejs cache"
+    "cache"
   ],
   "author": "amar",
   "license": "MIT",
