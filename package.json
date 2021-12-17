@@ -1,6 +1,6 @@
 {
   "name": "@ostro/cache",
-  "version": "0.0.0-alpha.2",
+  "version": "0.0.0-alpha.1",
   "description": "Caching module for OstroJS",
   "main": "cacheManager.js",
   "scripts": {
