@@ -6,7 +6,6 @@ const kConfig = Symbol('config')
 const kPrefix = Symbol('prefix')
 const kRootPath = Symbol('rootPah')
 const kRootUrl = Symbol('rootUrl')
-const { valueType } = require('@ostro/support/helpers')
 
 class StoreHelper {
 
