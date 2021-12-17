@@ -18,7 +18,7 @@ class CacheManager extends Manager {
         if (!($config)) {
             throw new InvalidArgumentException(`Cache store [${name}] is not defined.`);
         }
-        return super.resolve($config['driver'], $config)
+        return super.resolve(name, $config)
     }
 
     createMemoryDriver($config) {
@@ -50,11 +50,11 @@ class CacheManager extends Manager {
     }
 
     getPrefix() {
-        return this.$config.get(`${this.$type}.prefix`);
+        return super.getConfig(`prefix`);
     }
 
     getStoreConfig(name) {
-        return this.$config.get(`${this.$type}.stores.${name}`);
+        return this.getConfig(`stores.${name}`);
     }
 
 }
