@@ -2,20 +2,14 @@ const Command = require('@ostro/console/command')
 
 class ForgetCommand extends Command {
 
-    get $signature() {
-        return 'cache:forget';
-    }
+    $signature = 'cache:forget';
 
-    get $description() {
-        return 'Remove an item from the cache'
-    }
+    $description = 'Remove an item from the cache';
 
-    get $arguments() {
-        return [
-            this.createArgument('key', 'The key to remove').required(),
-            this.createArgument('store', 'The store to remove the key from')
-        ]
-    }
+    $arguments = [
+        this.createArgument('key', 'The key to remove').required(),
+        this.createArgument('store', 'The store to remove the key from')
+    ];
 
     constructor($cache) {
         super()

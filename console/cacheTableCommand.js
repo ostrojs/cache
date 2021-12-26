@@ -1,34 +1,25 @@
-const Command  = require('@ostro/console/command')
-class CacheTableCommand extends Command
-{
+const Command = require('@ostro/console/command')
+class CacheTableCommand extends Command {
 
-    get $signature() {
-        return 'cache:table';
-    }
+    $signature = 'cache:table';
 
-    get $description() {
-        return 'Create a migration for the cache database table'
-    };
+    $description = 'Create a migration for the cache database table';
 
-    constructor($files)
-    {
+    constructor($files) {
         super();
-
         this.$file = $files;
     }
 
-    async handle()
-    {
+    async handle() {
         let $fullPath = await this.createBaseMigration();
 
-        await this.$file.put($fullPath, await this.$file.get(__dirname+'/stubs/cache.stub'));
+        await this.$file.put($fullPath, await this.$file.get(__dirname + '/stubs/cache.stub'));
 
         this.info('Migration created successfully!');
 
     }
 
-    createBaseMigration()
-    {
+    createBaseMigration() {
         let $name = 'create_cache_table';
 
         let $path = this.$app.databasePath('migrations');

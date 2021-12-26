@@ -2,29 +2,20 @@ const Command = require('@ostro/console/command')
 
 class ClearCommand extends Command {
 
-    get $signature() {
-        return 'cache:clear';
-    }
+    $signature = 'cache:clear';
 
-    get $description() {
-        return 'Flush the application cache'
-    };
+    $description = 'Flush the application cache';
 
-    get $options() {
-        return [
-            this.createOption('--store [store] ', 'The name of the store you would like to clear').default(''),
-        ]
-    }
+    $options = [
+        this.createOption('--store [store] ', 'The name of the store you would like to clear').default(''),
+    ];
 
-    get $arguments() {
-        return [
-            this.createArgument('[tag]', 'The cache tags you would like to clear')
-        ]
-    }
+    $arguments = [
+        this.createArgument('[tag]', 'The cache tags you would like to clear')
+    ];
 
     constructor($cache, $files) {
         super()
-
         this.$cache = $cache;
         this.$files = $files;
     }
