@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@ostro/support": "^0.0.0-alpha",
+    "@ostro/support": "^1.0.2",
     "bluebird": "^3.7.2",
     "fs-extra": "^10.0.0"
   },
