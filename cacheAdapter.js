@@ -14,9 +14,9 @@ class Cache {
 
     async has(key) {
         if (this[kEnabled] == false) {
-            return true
+            return false
         }
-        return Boolean(this.get(key)) || false
+        return Boolean(await this.get(key)) || false
     }
 
     async get(key, defaultValue = null) {
@@ -72,36 +72,36 @@ class Cache {
 
     async [kIncrementOrDecrement](key, value, callback) {
         return this[kAdapter].get(key).then((result) => {
-                if (Date.now() / 1000 >= Number(result.expiration)) {
-                    this.forget(key)
-                    return false
-                }
-                if (result.value === undefined) {
-                    return false
-                }
-                const currentValue = parseInt(result.value)
-                if (isNaN(currentValue)) {
-                    return false
-                }
-                const newValue = callback(currentValue)
-                return this.put('key', newValue, result.expiration)
-                    .then(result => newValue)
-                    .catch(err => false)
-            })
+            if (Date.now() / 1000 >= Number(result.expiration)) {
+                this.forget(key)
+                return false
+            }
+            if (result.value === undefined) {
+                return false
+            }
+            const currentValue = parseInt(result.value)
+            if (isNaN(currentValue)) {
+                return false
+            }
+            const newValue = callback(currentValue)
+            return this.put('key', newValue, result.expiration)
+                .then(result => newValue)
+                .catch(err => false)
+        })
             .catch(err => false)
     }
 
     async increment(key, value = 1) {
         return this[kIncrementOrDecrement](key, value, (currentValue) => {
-                return currentValue + value
-            })
+            return currentValue + value
+        })
             .catch(err => false)
     }
 
     async decrement(key, value = 1) {
         return this[kIncrementOrDecrement](key, value, (currentValue) => {
-                return currentValue - value
-            })
+            return currentValue - value
+        })
             .catch(err => false)
     }
 
