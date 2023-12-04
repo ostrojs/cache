@@ -1,13 +1,13 @@
 {
   "name": "@ostro/cache",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Caching module for OstroJS",
   "main": "cacheManager.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@ostro/support": "^1.0.2",
+    "@ostro/support": "^1.0.11",
     "bluebird": "^3.7.2",
     "fs-extra": "^10.0.0"
   },
