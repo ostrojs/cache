@@ -94,6 +94,7 @@ class StoreHelper {
         if (['json', 'array', 'number'].includes(obj.valueType)) {
             obj.value = JSON.parse(obj.value)
         }
+        obj.expiration = Number(obj.expiration)
         return obj
     }
 }
