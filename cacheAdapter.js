@@ -1,4 +1,4 @@
-const { promiseAll, getMinutes } = require('./utils')
+const { promiseAll, getSeconds } = require('./utils')
 const kAdapter = Symbol('adapter')
 const Promise = require("bluebird")
 let kIncrementOrDecrement = Symbol('incrementOrDecrement')
@@ -16,27 +16,28 @@ class Cache {
         if (this[kEnabled] == false) {
             return false
         }
-        return Boolean(await this.get(key)) || false
+        const data = await this.get(key);
+        return Boolean(typeof data !== undefined && data) || false
     }
 
     async get(key, defaultValue = null) {
         if (this[kEnabled] == false) {
             return null
         }
-        return this[kAdapter].get(key, defaultValue)
+        return this[kAdapter].get(key).then(result => result.value)
             .catch(err => defaultValue)
     }
 
-    async put(key, value, minutes = 0) {
+    async put(key, value, seconds = 0) {
         if (this[kEnabled] == false) {
             return true
 
         }
-        minutes = getMinutes(minutes)
-        if (isNaN(minutes)) {
-            minutes = 0
+        seconds = getSeconds(seconds)
+        if (isNaN(seconds)) {
+            seconds = 0
         }
-        return this[kAdapter].put(key, value, minutes)
+        return this[kAdapter].put(key, value, seconds)
             .then(result => {
                 if (result == true)
                     return true
@@ -63,9 +64,9 @@ class Cache {
             })
     }
 
-    async putMany(object = {}, minutes) {
+    async putMany(object = {}, seconds) {
         for (let prop in object) {
-            object[prop] = this.put(prop, object[prop], getMinutes(minutes));
+            object[prop] = this.put(prop, object[prop], getSeconds(seconds));
         }
         return promiseAll(object)
     }
@@ -84,7 +85,7 @@ class Cache {
                 return false
             }
             const newValue = callback(currentValue)
-            return this.put('key', newValue, result.expiration)
+            return this.put(key, newValue, result.expiration)
                 .then(result => newValue)
                 .catch(err => false)
         })
@@ -109,7 +110,7 @@ class Cache {
         return this.put(key, value, Infinity)
     }
 
-    async remember(key, minutes = 0, cb) {
+    async remember(key, seconds = 0, cb) {
         if (typeof cb != 'function') {
             throw Error('Callback is required.')
         }
@@ -124,7 +125,7 @@ class Cache {
                 res = await Promise.resolve(res)
 
                 if (res) {
-                    await this.put(key, res, getMinutes(minutes))
+                    await this.put(key, res, getSeconds(seconds))
                 }
             }
             return res

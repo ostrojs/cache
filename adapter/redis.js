@@ -2,7 +2,7 @@ const Promise = require("bluebird")
 const StoreHelper = require('./StoreHelper')
 const kClient = Symbol('client')
 const kConnection = Symbol('connection')
-const { minutesToMs } = require('../utils')
+const { secondsToMs } = require('../utils')
 class RedisStore extends StoreHelper {
 
     constructor($redisClient, $config, $prefix) {
@@ -10,19 +10,19 @@ class RedisStore extends StoreHelper {
         this[kClient] = $redisClient
     }
 
-    async get(key, defaultValue = null) {
+    async get(key) {
         return this.connection().getAsync(this.applyDotPrefix(key)).then(result => {
-            return this.parseValue(result).value
-        }).catch(err => defaultValue)
+            return this.parseValue(result)
+        })
     }
 
-    async put(key, value, minutes = 0) {
+    async put(key, value, seconds = 0) {
         const prefixedKey = this.applyDotPrefix(key)
         let {
             serializedValue,
             valueType
         } = this.serializeValue(value)
-        let expiration = minutes == Infinity ? [] : ['EX', minutesToMs(minutes).toString()]
+        let expiration = seconds == Infinity ? [] : ['EX', (secondsToMs(seconds)).toString()]
         return this.connection().setAsync(prefixedKey, JSON.stringify({
             value: serializedValue,
             valueType: valueType

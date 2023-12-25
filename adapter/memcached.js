@@ -1,7 +1,7 @@
 const StoreHelper = require('./StoreHelper')
 const kClient = Symbol('client')
 const kConnection = Symbol('connection')
-const { minutesToMs } = require('../utils')
+const { secondsToMs } = require('../utils')
 class MemcachedStore extends StoreHelper {
 
     constructor($client, $config, $prefix) {
@@ -9,19 +9,19 @@ class MemcachedStore extends StoreHelper {
         this[kClient] = $client
     }
 
-    get(key, defaultValue = null) {
+    get(key) {
         return this.connection().get(this.applyDotPrefix(key)).then(result => {
-            return this.parseValue(result.value).value
-        }).catch(err => defaultValue)
+            return this.parseValue(result.value)
+        })
     }
 
-    put(key, value, minutes = 0) {
+    put(key, value, seconds = 0) {
         const prefixedKey = this.applyDotPrefix(key)
         let {
             serializedValue,
             valueType
         } = this.serializeValue(value)
-        let expiration = minutes == Infinity ? 0 : minutesToMs(minutes).toString()
+        let expiration = seconds == Infinity ? 0 : secondsToMs(seconds).toString()
         return this.connection().set(prefixedKey, JSON.stringify({
             value: serializedValue,
             valueType: valueType
