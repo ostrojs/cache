@@ -1,5 +1,7 @@
-const StoreHelper = require('./StoreHelper')
-const kStorage = Symbol('storage')
+const StoreHelper = require('./StoreHelper');
+const kStorage = Symbol('storage');
+const { secondsToMs } = require('../utils')
+
 class ObjectStore extends StoreHelper {
 
     constructor($config) {
@@ -7,36 +9,36 @@ class ObjectStore extends StoreHelper {
         this[kStorage] = Object.create(null)
     }
 
-    async get(key, defaultValue = null) {
+    async get(key) {
         let cache = this[kStorage][this.applyDotPrefix(key)]
         if (cache === undefined) {
-            return defaultValue
+            return Promise.reject()
         }
-        if (Date.now() / 1000 >= Number(cache.expiration)) {
+        if (Date.now() / 1000 >= cache.expiration) {
             this.forget(key)
-            return defaultValue
+            return Promise.reject()
         }
-        return cache.value
+        return Promise.resolve(cache)
     }
 
-    async put(key, value, minutes = 0) {
-        let expiration = Math.floor((Date.now() / 1000) + minutes * 60)
+    async put(key, value, seconds = 0) {
+        let expiration = secondsToMs(seconds);
         this[kStorage][this.applyDotPrefix(key)] = {
             value: value,
-            expiration: expiration.toString()
+            expiration: expiration
         }
         return true
     }
 
     async forget(key) {
         delete this[kStorage][this.applyDotPrefix(key)]
-        return true
+        return Promise.resolve(true)
     }
 
     async flush() {
 
         this[kStorage] = {}
-        return true
+        return Promise.resolve(true)
 
     }
 }

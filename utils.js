@@ -11,12 +11,12 @@ exports.promiseAll = function promiseAll(object) {
         })
 }
 
-exports.getMinutes = function getMinutes(duration) {
+exports.getSeconds = function getSeconds(duration) {
     if (duration instanceof Date) {
-        duration = ((duration.getTime() - Date.now()) / 1000) / 60
+        duration = ((duration.getTime() - Date.now()) / 1000)
     }
-    return   (duration * 60) > 0 ? duration : 0
+    return (duration * 60) > 0 ? duration : 0
 }
-exports.minutesToMs = function minutesToMs(duration) {
-    return Math.floor((Date.now() / 1000) + (duration * 60))
+exports.secondsToMs = function secondsToMs(duration) {
+    return Math.floor((Date.now() / 1000) + duration)
 }

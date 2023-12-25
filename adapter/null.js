@@ -4,7 +4,7 @@ class NullStore {
         return null
     }
 
-    async put(key, value, minutes = 0) {
+    async put(key, value, seconds = 0) {
         return true
     }
 
