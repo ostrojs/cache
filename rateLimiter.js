@@ -1,5 +1,6 @@
 
 const InteractsWithTime = require('@ostro/support/interactsWithTime');
+const is_null = (val) => val == null;
 
 class RateLimiter extends InteractsWithTime {
 
@@ -26,7 +27,7 @@ class RateLimiter extends InteractsWithTime {
         if (await this.tooManyAttempts($key, $maxAttempts)) {
             return false;
         }
-        $result = await $callback();
+        let $result = await $callback();
         if (is_null($result)) {
             $result = true;
         }

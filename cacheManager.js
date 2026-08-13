@@ -1,4 +1,3 @@
-require('@ostro/support/helpers')
 const InvalidArgumentException = require('@ostro/support/exceptions/invalidArgumentException')
 const CacheAdapter = require('./cacheAdapter')
 const Manager = require('@ostro/support/manager')
@@ -22,31 +21,31 @@ class CacheManager extends Manager {
     }
 
     createMemoryDriver($config) {
-        return this.adapt(new(require('./adapter/memory'))($config));
+        return this.adapt(new (require('./adapter/memory'))($config));
     }
 
     createRedisDriver($config) {
-        return this.adapt(new(require('./adapter/redis'))(new(require('./client/redis'))($config), $config, this.getPrefix()));
+        return this.adapt(new (require('./adapter/redis'))(new (require('./client/redis'))($config), $config, this.getPrefix()));
     }
 
     createMemcachedDriver($config) {
-        return this.adapt(new(require('./adapter/memcached'))(new(require('./client/memcached'))($config), $config, this.getPrefix()));
+        return this.adapt(new (require('./adapter/memcached'))(new (require('./client/memcached'))($config), $config, this.getPrefix()));
     }
 
     createNullDriver($config) {
-        return this.adapt(new(require('./adapter/null'))($config));
+        return this.adapt(new (require('./adapter/null'))($config));
     }
 
     createFileDriver($config) {
-        return this.adapt(new(require('./adapter/file'))($config['path'], $config, this.getPrefix()))
+        return this.adapt(new (require('./adapter/file'))($config['path'], $config, this.getPrefix()))
     }
 
     createDatabaseDriver($config) {
-        return this.adapt(new(require('./adapter/database'))($config['table'], this.$container.database))
+        return this.adapt(new (require('./adapter/database'))($config['table'], this.$container.database))
     }
 
     adapt($cache) {
-        return new CacheAdapter($cache, this.$config.get(`${this.$type}.enabled`));
+        return new CacheAdapter($cache, this.getConfig('enabled'));
     }
 
     getPrefix() {
@@ -55,6 +54,10 @@ class CacheManager extends Manager {
 
     getStoreConfig(name) {
         return this.getConfig(`stores.${name}`);
+    }
+
+    getDriverConfig(name) {
+        return this.getStoreConfig(name);
     }
 
 }

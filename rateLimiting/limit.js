@@ -1,18 +1,5 @@
 
-const Unlimited = require('./unlimited')
 class Limit {
-
-    $key;
-
-
-    $maxAttempts;
-
-
-    $decayMinutes;
-
-
-    $responseCallback;
-
 
     constructor($key = '', $maxAttempts = 60, $decayMinutes = 1) {
         this.$key = $key;
@@ -22,22 +9,23 @@ class Limit {
 
 
     static perMinute($maxAttempts) {
-        return new this.constructor('', $maxAttempts);
+        return new this('', $maxAttempts);
     }
 
     static perMinutes($decayMinutes, $maxAttempts) {
-        return new this.constructor('', $maxAttempts, $decayMinutes);
+        return new this('', $maxAttempts, $decayMinutes);
     }
 
     static perHour($maxAttempts, $decayHours = 1) {
-        return new this.constructor('', $maxAttempts, 60 * $decayHours);
+        return new this('', $maxAttempts, 60 * $decayHours);
     }
 
     static perDay($maxAttempts, $decayDays = 1) {
-        return new this.constructor('', $maxAttempts, 60 * 24 * $decayDays);
+        return new this('', $maxAttempts, 60 * 24 * $decayDays);
     }
 
     static none() {
+        const Unlimited = require('./unlimited');
         return new Unlimited;
     }
 

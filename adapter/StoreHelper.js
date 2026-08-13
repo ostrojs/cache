@@ -2,6 +2,7 @@ const path = require('path')
 const url = require('url')
 const crypto = require('crypto')
 const fs = require('fs-extra')
+const { valueType } = require('@ostro/support/function')
 const kConfig = Symbol('config')
 const kPrefix = Symbol('prefix')
 const kRootPath = Symbol('rootPah')
@@ -77,7 +78,7 @@ class StoreHelper {
     }
 
     valueType(value) {
-        return valueType(value)
+        return valueType(value);
     }
 
     serializeValue(value) {

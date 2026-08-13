@@ -1,16 +1,18 @@
 const kConnection = Symbol('connection');
 const kTable = Symbol('table');
 const StoreHelper = require('./StoreHelper')
+const { secondsToMs } = require('../utils')
 
 class Database extends StoreHelper {
 
     constructor(table, $connection) {
+        super();
         this[kTable] = table;
         this[kConnection] = $connection;
     }
 
     async get(key) {
-        return this[kConnection].table(this[kTable]).where({ key }).first().then(res => (res || Promise.reject(defaultValue))).then((result) => {
+        return this[kConnection].table(this[kTable]).where({ key }).first().then(res => (res || Promise.reject())).then((result) => {
             if (Date.now() / 1000 >= Number(result.expiration)) {
                 this.forget(key)
                 return Promise.reject()

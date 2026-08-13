@@ -5,8 +5,10 @@ let kIncrementOrDecrement = Symbol('incrementOrDecrement')
 const kEnabled = Symbol('enabled')
 
 class Cache {
+
     [kAdapter];
     [kEnabled];
+
     constructor($adapter, $enabled = true) {
         this[kAdapter] = $adapter;
         this[kEnabled] = $enabled;
@@ -86,7 +88,7 @@ class Cache {
             }
             const newValue = callback(currentValue)
             return this.put(key, newValue, result.expiration)
-                .then(result => newValue)
+                .then(res => res === true ? newValue : false)
                 .catch(err => false)
         })
             .catch(err => false)
