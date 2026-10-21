@@ -1,31 +1,53 @@
 {
-  "name": "@ostro/cache",
-  "version": "1.0.2",
-  "description": "Caching module for OstroJS",
-  "main": "cacheManager.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "dependencies": {
-    "@ostro/support": "^1.0.11",
-    "bluebird": "^3.7.2",
-    "fs-extra": "^10.0.0"
-  },
-  "engines": {
-    "node": ">=12.0.0"
-  },
-  "engineStrict": true,
-  "keywords": [
-    "cache"
-  ],
-  "author": "amar",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ostrojs/cache.git"
-  },
-  "bugs": {
-    "url": "https://github.com/ostrojs/cache/issues"
-  },
-  "homepage": "https://github.com/ostrojs/cache#readme"
+    "name": "@ostro/cache",
+    "version": "2.0.0-alpha.1",
+    "description": "Caching module for OstroJS",
+    "main": "build/cacheManager.js",
+    "types": "build/cacheManager.d.ts",
+    "files": [
+        "build"
+    ],
+    "exports": {
+        ".": {
+            "types": "./build/cacheManager.d.ts",
+            "default": "./build/cacheManager.js"
+        },
+        "./*": {
+            "types": "./build/*.d.ts",
+            "default": "./build/*.js"
+        }
+    },
+    "scripts": {
+        "build": "rm -rf build && npx tsc -p tsconfig.build.json && mkdir -p build/console/stubs && cp src/console/stubs/* build/console/stubs/ && node scripts/build.js",
+        "prepublishOnly": "npm run build",
+        "test": "npx c8 npx jest",
+        "clean": "rm -rf build coverage"
+    },
+    "dependencies": {
+        "@ostro/support": "^2.0.0-alpha.1",
+        "bluebird": "^3.7.2",
+        "fs-extra": "^11.4.1"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    },
+    "engineStrict": true,
+    "keywords": [
+        "cache"
+    ],
+    "author": "amar",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ostrojs/cache.git"
+    },
+    "bugs": {
+        "url": "https://github.com/ostrojs/cache/issues"
+    },
+    "homepage": "https://github.com/ostrojs/cache#readme",
+    "devDependencies": {
+        "@ostro/console": "^2.0.0-alpha.1",
+        "@types/node": "^22.20.5",
+        "typescript": "^5.8.0"
+    }
 }
