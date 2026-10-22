@@ -30,10 +30,6 @@ export default {
         ]
     },
     "moduleNameMapper": {
-        "^@ostro/support/(.*)$": "<rootDir>/../support/src/$1",
-        "^@ostro/support$": "<rootDir>/../support/src",
-        "^@ostro/contracts/(.*)$": "<rootDir>/../contracts/src/$1",
-        "^@ostro/contracts$": "<rootDir>/../contracts/src",
         "^@ostro/cache/(.*)$": "<rootDir>/src/$1",
         "^@ostro/cache$": "<rootDir>/src/cacheManager"
     },
