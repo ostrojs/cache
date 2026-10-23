@@ -1,20 +1,17 @@
 {
     "name": "@ostro/cache",
-    "version": "2.0.0-alpha.4",
+    "version": "2.0.0-alpha.5",
     "description": "Caching module for OstroJS",
-    "main": "build/cacheManager.js",
-    "types": "build/types/cacheManager.d.ts",
-    "files": [
-        "build"
-    ],
+    "main": "cacheManager.js",
+    "types": "types/cacheManager.d.ts",
     "exports": {
         ".": {
-            "types": "./build/types/cacheManager.d.ts",
-            "default": "./build/cacheManager.js"
+            "types": "./types/cacheManager.d.ts",
+            "default": "./cacheManager.js"
         },
         "./*": {
-            "types": "./build/types/*.d.ts",
-            "default": "./build/*.js"
+            "types": "./types/*.d.ts",
+            "default": "./*.js"
         }
     },
     "scripts": {
@@ -25,7 +22,7 @@
         "lint:check": "tsc --noEmit -p tsconfig.build.json"
     },
     "dependencies": {
-        "@ostro/support": "^2.0.0-alpha.6",
+        "@ostro/support": "^2.0.0-alpha.7",
         "bluebird": "^3.7.2",
         "fs-extra": "^11.4.1"
     },
@@ -47,7 +44,7 @@
     },
     "homepage": "https://github.com/ostrojs/cache#readme",
     "devDependencies": {
-        "@ostro/console": "^2.0.0-alpha.6",
+        "@ostro/console": "^2.0.0-alpha.7",
         "@types/node": "^22.0.0",
         "typescript": "^5.8.0",
         "@types/jest": "^30.0.0",
@@ -55,7 +52,7 @@
         "jest": "^30.5.2",
         "ts-jest": "^29.4.15",
         "ts-node": "^10.9.2",
-        "@ostro/builder": "^2.0.0-alpha.3"
+        "@ostro/builder": "^2.0.0-alpha.4"
     },
     "overrides": {
         "sprintf-js": "^1.1.3",
