@@ -25,7 +25,7 @@
         "lint:check": "tsc --noEmit -p tsconfig.build.json"
     },
     "dependencies": {
-        "@ostro/support": "^2.0.0-alpha.5",
+        "@ostro/support": "^2.0.0-alpha.6",
         "bluebird": "^3.7.2",
         "fs-extra": "^11.4.1"
     },
