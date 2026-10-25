@@ -1,16 +1,12 @@
 import StoreHelper from './StoreHelper';
 import { secondsToMs } from '../utils';
 
-const kConnection: unique symbol = Symbol('connection');
-const kTable: unique symbol = Symbol('table');
-
 /**
  * Class Database.
  */
 class Database extends StoreHelper {
-
-    [kTable]: string;
-    [kConnection]: any;
+    #table: string;
+    #connection: any;
 
     /**
      * Create a new instance.
@@ -19,8 +15,8 @@ class Database extends StoreHelper {
      */
     constructor(table: string, $connection: any) {
         super();
-        this[kTable] = table;
-        this[kConnection] = $connection;
+        this.#table = table;
+        this.#connection = $connection;
     }
 
     /**
@@ -29,7 +25,7 @@ class Database extends StoreHelper {
      * @returns Cached item
      */
     public async get(key: string): Promise<any> {
-        return this[kConnection].table(this[kTable]).where({ key }).first().then((res: any) => (res || Promise.reject())).then((result: any) => {
+        return this.#connection.table(this.#table).where({ key }).first().then((res: any) => (res || Promise.reject())).then((result: any) => {
             if (Date.now() / 1000 >= Number(result.expiration)) {
                 this.forget(key);
                 return Promise.reject();
@@ -52,7 +48,7 @@ class Database extends StoreHelper {
      */
     public async put(key: string, value: any, seconds: number = 0): Promise<boolean> {
         const { serializedValue, valueType } = this.serializeValue(value);
-        return this[kConnection].table(this[kTable]).updateOrInsert({ key }, {
+        return this.#connection.table(this.#table).updateOrInsert({ key }, {
             value: serializedValue,
             valueType: valueType,
             expiration: secondsToMs(seconds).toString()
@@ -67,7 +63,7 @@ class Database extends StoreHelper {
      * @returns True if deleted
      */
     public async forget(key: string): Promise<boolean> {
-        return this[kConnection].table(this[kTable]).where({ key }).delete().then(() => true).catch(() => false);
+        return this.#connection.table(this.#table).where({ key }).delete().then(() => true).catch(() => false);
     }
 
     /**
@@ -75,7 +71,7 @@ class Database extends StoreHelper {
      * @returns True if deleted
      */
     public async flush(): Promise<boolean> {
-        return this[kConnection].table(this[kTable]).delete().then(() => true).catch(() => false);
+        return this.#connection.table(this.#table).delete().then(() => true).catch(() => false);
     }
 }
 

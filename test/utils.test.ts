@@ -1,3 +1,4 @@
+import { describe, test, expect } from "@jest/globals";
 const { promiseAll, getSeconds, secondsToMs } = require('../src/utils');
 
 describe('utils.js Unit Tests', () => {

@@ -1,20 +1,16 @@
-const kConnection: unique symbol = Symbol('connection');
-const kConfig: unique symbol = Symbol('config');
-
 /**
  * Class RedisClient.
  */
 class RedisClient {
-
-    [kConnection]?: any;
-    [kConfig]: Record<string, any>;
+    #connection?: any;
+    #config: Record<string, any>;
 
     /**
      * Create a new instance.
      * @param $config - Redis configuration object
      */
     constructor($config: Record<string, any>) {
-        this[kConfig] = $config;
+        this.#config = $config;
     }
 
     /**
@@ -22,16 +18,16 @@ class RedisClient {
      * @returns Redis connection instance
      */
     public getConnection(): any {
-        if (!this[kConnection]) {
+        if (!this.#connection) {
             const redisModule = require('redis');
             const redis = redisModule?.default || redisModule;
-            const server = this[kConfig]['server'];
-            this[kConnection] = (redis as any).createClient(server['port'], server['host'], server);
-            this[kConnection].auth(server['password']);
+            const server = this.#config['server'];
+            const redisClientFactory = redis as { createClient: (port: number, host: string, opts?: unknown) => { auth: (pass: string) => void } };
+        this.#connection = redisClientFactory.createClient(server['port'], server['host'], server);
+            this.#connection.auth(server['password']);
         }
-        return this[kConnection];
+        return this.#connection;
     }
-
 }
 
 export default RedisClient;
