@@ -2,17 +2,12 @@ import type { ICacheRepository } from '@ostro/contracts/cache/repositry';
 import { promiseAll, getSeconds } from './utils';
 import Promise from 'bluebird';
 
-const kAdapter: unique symbol = Symbol('adapter');
-const kIncrementOrDecrement: unique symbol = Symbol('incrementOrDecrement');
-const kEnabled: unique symbol = Symbol('enabled');
-
 /**
  * Class Cache.
  */
 class Cache implements ICacheRepository {
-
-    [kAdapter]: any;
-    [kEnabled]: boolean;
+    #adapter: any;
+    #enabled: boolean;
 
     /**
      * Create a new instance.
@@ -20,8 +15,8 @@ class Cache implements ICacheRepository {
      * @param $enabled - Whether caching is enabled
      */
     constructor($adapter: any, $enabled: boolean = true) {
-        this[kAdapter] = $adapter;
-        this[kEnabled] = $enabled;
+        this.#adapter = $adapter;
+        this.#enabled = $enabled;
     }
 
     /**
@@ -30,7 +25,7 @@ class Cache implements ICacheRepository {
      * @returns True if key exists and has value
      */
     public async has(key: string): Promise<boolean> {
-        if (this[kEnabled] === false) {
+        if (this.#enabled === false) {
             return false;
         }
         const data = await this.get(key);
@@ -45,10 +40,10 @@ class Cache implements ICacheRepository {
      * @returns Cached value or default value
      */
     public async get<T = unknown>(key: string, defaultValue: T | null = null): Promise<T | null> {
-        if (this[kEnabled] === false) {
+        if (this.#enabled === false) {
             return null;
         }
-        return this[kAdapter].get(key).then((result: any) => result.value)
+        return this.#adapter.get(key).then((result: any) => result.value)
             .catch(() => defaultValue);
     }
 
@@ -61,14 +56,14 @@ class Cache implements ICacheRepository {
      * @returns True if saved successfully
      */
     public async put<T = unknown>(key: string, value: T, seconds: number | Date = 0): Promise<boolean> {
-        if (this[kEnabled] === false) {
+        if (this.#enabled === false) {
             return true;
         }
         let sec: number = getSeconds(seconds);
         if (isNaN(sec)) {
             sec = 0;
         }
-        return this[kAdapter].put(key, value, sec)
+        return this.#adapter.put(key, value, sec)
             .then((result: any) => {
                 if (result === true)
                     return true;
@@ -129,8 +124,8 @@ class Cache implements ICacheRepository {
      * @param callback - Math modifier
      * @returns New value or false
      */
-    async [kIncrementOrDecrement](key: string, value: number, callback: (current: number) => number): Promise<number | false> {
-        return this[kAdapter].get(key).then((result: any) => {
+    async #incrementOrDecrement(key: string, value: number, callback: (current: number) => number): Promise<number | false> {
+        return this.#adapter.get(key).then((result: any) => {
             if (Date.now() / 1000 >= Number(result.expiration)) {
                 this.forget(key);
                 return false;
@@ -157,7 +152,7 @@ class Cache implements ICacheRepository {
      * @returns New value or false
      */
     public async increment(key: string, value: number = 1): Promise<number | false> {
-        return this[kIncrementOrDecrement](key, value, (currentValue: number) => {
+        return this.#incrementOrDecrement(key, value, (currentValue: number) => {
             return currentValue + value;
         })
             .catch(() => false);
@@ -170,7 +165,7 @@ class Cache implements ICacheRepository {
      * @returns New value or false
      */
     public async decrement(key: string, value: number = 1): Promise<number | false> {
-        return this[kIncrementOrDecrement](key, value, (currentValue: number) => {
+        return this.#incrementOrDecrement(key, value, (currentValue: number) => {
             return currentValue - value;
         })
             .catch(() => false);
@@ -203,7 +198,7 @@ class Cache implements ICacheRepository {
             if (res == null) {
                 let computed: any;
                 if (cb.length === 1) {
-                    computed = Promise.fromCallback(cb as any);
+                    computed = Promise.fromCallback(cb as (fn: (err: Error | null, res: unknown) => void) => void);
                 } else {
                     computed = cb();
                 }
@@ -239,10 +234,10 @@ class Cache implements ICacheRepository {
      * @returns True if deleted
      */
     public async forget(key: string): Promise<boolean> {
-        if (this[kEnabled] === false) {
+        if (this.#enabled === false) {
             return true;
         }
-        return this[kAdapter].forget(key).then(() => true).catch(() => false);
+        return this.#adapter.forget(key).then(() => true).catch(() => false);
     }
 
     /**
@@ -250,12 +245,11 @@ class Cache implements ICacheRepository {
      * @returns True if flushed
      */
     public async flush(): Promise<boolean> {
-        if (this[kEnabled] === false) {
+        if (this.#enabled === false) {
             return true;
         }
-        return this[kAdapter].flush().then(() => true).catch(() => false);
+        return this.#adapter.flush().then(() => true).catch(() => false);
     }
-
 }
 
 export default Cache;

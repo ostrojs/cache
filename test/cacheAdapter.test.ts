@@ -1,3 +1,4 @@
+import { describe, test, it, expect, beforeEach } from "@jest/globals";
 const _CacheAdapter = require('../src/cacheAdapter');
 const CacheAdapter = _CacheAdapter.default || _CacheAdapter;
 const _NullStore = require('../src/adapter/null');

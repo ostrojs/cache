@@ -1,14 +1,11 @@
 import StoreHelper from './StoreHelper';
 import { secondsToMs } from '../utils';
 
-const kStorage: unique symbol = Symbol('storage');
-
 /**
  * Class ObjectStore.
  */
 class ObjectStore extends StoreHelper {
-
-    [kStorage]: Record<string, { value: any; expiration: number }>;
+    #storage: Record<string, { value: any; expiration: number }>;
 
     /**
      * Create a new instance.
@@ -16,7 +13,7 @@ class ObjectStore extends StoreHelper {
      */
     constructor($config: Record<string, any>) {
         super($config);
-        this[kStorage] = Object.create(null);
+        this.#storage = Object.create(null);
     }
 
     /**
@@ -25,7 +22,7 @@ class ObjectStore extends StoreHelper {
      * @returns Cached item
      */
     public async get(key: string): Promise<{ value: any; expiration: number }> {
-        const cache = this[kStorage][this.applyDotPrefix(key)];
+        const cache = this.#storage[this.applyDotPrefix(key)];
         if (cache === undefined) {
             return Promise.reject();
         }
@@ -45,7 +42,7 @@ class ObjectStore extends StoreHelper {
      */
     public async put(key: string, value: any, seconds: number = 0): Promise<boolean> {
         const expiration = secondsToMs(seconds);
-        this[kStorage][this.applyDotPrefix(key)] = {
+        this.#storage[this.applyDotPrefix(key)] = {
             value: value,
             expiration: expiration
         };
@@ -58,7 +55,7 @@ class ObjectStore extends StoreHelper {
      * @returns True if forgotten
      */
     public async forget(key: string): Promise<boolean> {
-        delete this[kStorage][this.applyDotPrefix(key)];
+        delete this.#storage[this.applyDotPrefix(key)];
         return Promise.resolve(true);
     }
 
@@ -67,7 +64,7 @@ class ObjectStore extends StoreHelper {
      * @returns True if flushed
      */
     public async flush(): Promise<boolean> {
-        this[kStorage] = {};
+        this.#storage = {};
         return Promise.resolve(true);
     }
 }

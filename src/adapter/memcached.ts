@@ -1,16 +1,12 @@
 import StoreHelper from './StoreHelper';
 import { secondsToMs } from '../utils';
 
-const kClient: unique symbol = Symbol('client');
-const kConnection: unique symbol = Symbol('connection');
-
 /**
  * Class MemcachedStore.
  */
 class MemcachedStore extends StoreHelper {
-
-    [kClient]: any;
-    [kConnection]?: any;
+    #client: any;
+    #connection?: any;
 
     /**
      * Create a new instance.
@@ -20,7 +16,7 @@ class MemcachedStore extends StoreHelper {
      */
     constructor($client: any, $config: Record<string, any>, $prefix: string) {
         super($config, $prefix);
-        this[kClient] = $client;
+        this.#client = $client;
     }
 
     /**
@@ -73,12 +69,14 @@ class MemcachedStore extends StoreHelper {
 
     /**
      * Get or create Memcached connection.
-     * @returns Connection instance
+     * @returns Memcached client connection
      */
     public connection(): any {
-        return this[kConnection] = this[kConnection] ? this[kConnection] : this[kClient].getConnection();
+        if (!this.#connection) {
+            this.#connection = this.#client.getConnection();
+        }
+        return this.#connection;
     }
-
 }
 
 export default MemcachedStore;

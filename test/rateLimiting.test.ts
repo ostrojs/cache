@@ -1,3 +1,4 @@
+import { describe, test, expect } from "@jest/globals";
 const _Limit = require('../src/rateLimiting/limit');
 const Limit = _Limit.default || _Limit;
 const _GlobalLimit = require('../src/rateLimiting/globalLimit');
