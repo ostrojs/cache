@@ -25,10 +25,13 @@ export default {
         "^.+\\.ts$": [
             tsJestPath,
             {
-                "tsconfig": "<rootDir>/tsconfig.json"
+                "tsconfig": "<rootDir>/tsconfig.json",
+                "isolatedModules": true,
+                "diagnostics": false
             }
         ]
     },
+    "modulePathIgnorePatterns": ["<rootDir>/build/"],
     "moduleNameMapper": {
         "^@ostro/cache/(.*)$": "<rootDir>/src/$1",
         "^@ostro/cache$": "<rootDir>/src/cacheManager"
