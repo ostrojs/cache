@@ -1,23 +1,17 @@
-import path from 'path';
-import url from 'url';
-import crypto from 'crypto';
+import path from 'node:path';
+import url from 'node:url';
+import crypto from 'node:crypto';
 import fs from 'fs-extra';
 import { valueType } from '@ostro/support/function';
-
-const kConfig: unique symbol = Symbol('config');
-const kPrefix: unique symbol = Symbol('prefix');
-const kRootPath: unique symbol = Symbol('rootPath');
-const kRootUrl: unique symbol = Symbol('rootUrl');
 
 /**
  * Class StoreHelper.
  */
 class StoreHelper {
-
-    [kConfig]: Record<string, any>;
-    [kPrefix]: string;
-    [kRootPath]?: string;
-    [kRootUrl]?: string;
+    #config: Record<string, any>;
+    #prefix: string;
+    #rootPath?: string;
+    #rootUrl?: string;
 
     /**
      * Create a new instance.
@@ -25,8 +19,8 @@ class StoreHelper {
      * @param prefix - Key prefix
      */
     constructor(config: Record<string, any> = {}, prefix: string = '') {
-        this[kConfig] = config;
-        this[kPrefix] = prefix;
+        this.#config = config;
+        this.#prefix = prefix;
     }
 
     /**
@@ -34,7 +28,7 @@ class StoreHelper {
      * @returns Configuration object or null
      */
     public getConfig(): Record<string, any> | null {
-        return this[kConfig] || null;
+        return this.#config || null;
     }
 
     /**
@@ -42,7 +36,7 @@ class StoreHelper {
      * @param root - Base URL
      */
     public setRootUrl(root: string): void {
-        this[kRootUrl] = url.resolve(root, '');
+        this.#rootUrl = url.resolve(root, '');
     }
 
     /**
@@ -50,8 +44,8 @@ class StoreHelper {
      * @param root - Root directory path
      */
     public setRootPath(root: string): void {
-        this[kRootPath] = path.normalize(root);
-        fs.mkdirSync(path.normalize(this[kRootPath]), {
+        this.#rootPath = path.normalize(root);
+        fs.mkdirSync(path.normalize(this.#rootPath), {
             recursive: true
         });
     }
@@ -61,7 +55,7 @@ class StoreHelper {
      * @returns Prefix
      */
     public getPrefix(): string {
-        return this[kPrefix] || '';
+        return this.#prefix || '';
     }
 
     /**
@@ -78,7 +72,7 @@ class StoreHelper {
      * @returns Root directory path
      */
     public getRootPath(): string | undefined {
-        return this[kRootPath];
+        return this.#rootPath;
     }
 
     /**
@@ -87,7 +81,7 @@ class StoreHelper {
      * @returns Absolute path to file
      */
     public applyPathPrefix(dest: string): string {
-        return path.resolve(this[kRootPath] || '', crypto.createHash('md5').update(this.getPrefix() + '_' + dest).digest('hex'));
+        return path.resolve(this.#rootPath || '', crypto.createHash('md5').update(this.getPrefix() + '_' + dest).digest('hex'));
     }
 
     /**
@@ -95,7 +89,7 @@ class StoreHelper {
      * @returns Root URL string
      */
     public getRootUrl(): string | undefined {
-        return this[kRootUrl];
+        return this.#rootUrl;
     }
 
     /**
@@ -104,7 +98,7 @@ class StoreHelper {
      * @returns Resolved URL
      */
     public applyUrlPrefix(dest: string = '/'): string {
-        return url.resolve(([this[kRootUrl], dest].join('/')), '');
+        return url.resolve(([this.#rootUrl, dest].join('/')), '');
     }
 
     /**
@@ -113,7 +107,14 @@ class StoreHelper {
      * @param callback - Callback on completion
      */
     ensureDirectory(dir: string, callback?: (err: Error | null) => void): void {
-        (fs as any).ensureDir(dir, callback);
+        const fsEx = fs as typeof fs & { ensureDir?: (d: string, cb?: (err: Error | null) => void) => void };
+        if (typeof fsEx.ensureDir === 'function') {
+            fsEx.ensureDir(dir, callback);
+        } else {
+            fsEx.mkdir(dir, { recursive: true }, (err) => {
+                if (callback) callback(err);
+            });
+        }
     }
 
     /**

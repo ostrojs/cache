@@ -64,7 +64,7 @@ class ClearCommand extends Command {
      * @returns {any}
      */
     public async flushFacades() {
-        let storageFn = (globalThis as any).storage_path;
+        let storageFn = (globalThis as { storage_path?: (path?: string) => string }).storage_path;
         let $storagePath = typeof storageFn === 'function' ? storageFn('framework/cache') : (this.$app?.storagePath ? this.$app.storagePath('framework/cache') : 'storage/framework/cache');
         if (!await this.$files.exists($storagePath)) {
             return;

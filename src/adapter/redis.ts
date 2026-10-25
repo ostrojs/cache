@@ -2,16 +2,12 @@ import Promise from 'bluebird';
 import StoreHelper from './StoreHelper';
 import { secondsToMs } from '../utils';
 
-const kClient: unique symbol = Symbol('client');
-const kConnection: unique symbol = Symbol('connection');
-
 /**
  * Class RedisStore.
  */
 class RedisStore extends StoreHelper {
-
-    [kClient]: any;
-    [kConnection]?: any;
+    #client: any;
+    #connection?: any;
 
     /**
      * Create a new instance.
@@ -21,7 +17,7 @@ class RedisStore extends StoreHelper {
      */
     constructor($redisClient: any, $config: Record<string, any>, $prefix: string) {
         super($config, $prefix);
-        this[kClient] = $redisClient;
+        this.#client = $redisClient;
     }
 
     /**
@@ -73,13 +69,15 @@ class RedisStore extends StoreHelper {
     }
 
     /**
-     * Get or create Redis connection.
+     * Get or create promisified Redis connection.
      * @returns Promisified Redis connection
      */
     public connection(): any {
-        return this[kConnection] = this[kConnection] ? this[kConnection] : Promise.promisifyAll(this[kClient].getConnection());
+        if (!this.#connection) {
+            this.#connection = Promise.promisifyAll(this.#client.getConnection());
+        }
+        return this.#connection;
     }
-
 }
 
 export default RedisStore;

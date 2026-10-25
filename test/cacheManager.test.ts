@@ -1,9 +1,10 @@
+import { describe, test, expect, beforeEach, jest } from "@jest/globals";
 jest.mock('redis', () => ({ createClient: jest.fn(() => ({})) }), { virtual: true });
 jest.mock('memjs', () => ({ Client: { create: jest.fn(() => ({})) } }), { virtual: true });
 
 const _CacheManager = require('../src/cacheManager');
 const CacheManager = _CacheManager.default || _CacheManager;
-const path = require('path');
+const path = require('node:path');
 
 describe('CacheManager Unit Tests', () => {
     let container;

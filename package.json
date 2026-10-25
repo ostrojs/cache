@@ -1,30 +1,28 @@
 {
     "name": "@ostro/cache",
-    "version": "2.0.0-alpha.2",
+    "version": "2.0.0-alpha.3",
     "description": "Caching module for OstroJS",
-    "main": "build/cacheManager.js",
-    "types": "build/types/cacheManager.d.ts",
-    "files": [
-        "build"
-    ],
+    "main": "cacheManager.js",
+    "types": ".typed/cacheManager.d.ts",
     "exports": {
         ".": {
-            "types": "./build/types/cacheManager.d.ts",
-            "default": "./build/cacheManager.js"
+            "types": "./.typed/cacheManager.d.ts",
+            "default": "./cacheManager.js"
         },
         "./*": {
-            "types": "./build/types/*.d.ts",
-            "default": "./build/*.js"
+            "types": "./.typed/*.d.ts",
+            "default": "./*.js"
         }
     },
     "scripts": {
-        "build": "rm -rf build && npx tsc -p tsconfig.build.json && mkdir -p build/console/stubs && cp src/console/stubs/* build/console/stubs/ && node scripts/build.js",
+        "build": "npm run lint:check && rm -rf build && ostro-build --prepare",
         "prepublishOnly": "npm run build",
-        "test": "npx c8 npx jest",
-        "clean": "rm -rf build coverage"
+        "test": "jest",
+        "clean": "rm -rf build coverage",
+        "lint:check": "tsc --noEmit"
     },
     "dependencies": {
-        "@ostro/support": "^2.0.0-alpha.2",
+        "@ostro/support": "^2.0.0-alpha.3",
         "bluebird": "^3.7.2",
         "fs-extra": "^11.4.1"
     },
@@ -46,14 +44,15 @@
     },
     "homepage": "https://github.com/ostrojs/cache#readme",
     "devDependencies": {
-        "@ostro/console": "^2.0.0-alpha.2",
-        "@types/node": "^22.0.0",
-        "typescript": "^5.8.0",
+        "@ostro/builder": "^2.0.0-alpha.1",
+        "@ostro/console": "^2.0.0-alpha.3",
         "@types/jest": "^30.0.0",
+        "@types/node": "^22.0.0",
         "c8": "^10.1.3",
         "jest": "^30.5.2",
         "ts-jest": "^29.4.15",
-        "ts-node": "^10.9.2"
+        "ts-node": "^10.9.2",
+        "typescript": "^5.8.0"
     },
     "overrides": {
         "sprintf-js": "^1.1.3",

@@ -14,7 +14,7 @@ export function promiseAll<T extends Record<string, any> = Record<string, any>>(
             return resolvedValues.reduce((resolvedObject: Record<string, any>, property: any, index: number) => {
                 resolvedObject[objectKeys[index]] = property;
                 return resolvedObject;
-            }, object as unknown as Record<string, any>) as T;
+            }, object as Record<string, any>) as T;
         });
 }
 
